@@ -67,7 +67,7 @@ class OAuthModule implements AppModule
 
                 $token = $oAuthClient->getToken($request->GET->get("code"), $session->get(self::SESS_LAST_BACKLINK_KEY));
 
-                $session->set(self::SESS_TOKEN, $token["access_token"]);
+                $session->setOauthToken($token["access_token"]);
                 $session->set(self::SESS_TOKEN_TIMEOUT, time() + $token["expires_in"]);
 
                 $session->update();
