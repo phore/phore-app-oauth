@@ -1,6 +1,6 @@
 {
   "name": "phore/app-oauth",
-  "description": "Phore core library",
+  "description": "Phore Module OAuth2",
   "license": "MIT",
   "homepage": "https://infracamp.org/phore/",
   "authors": [
