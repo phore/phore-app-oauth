@@ -1,0 +1,33 @@
+{
+  "name": "phore/app-oauth",
+  "description": "Phore core library",
+  "license": "MIT",
+  "homepage": "https://infracamp.org/phore/",
+  "authors": [
+    { "name": "Matthias Leuffen", "email": "m@tth.es" }
+  ],
+  "repositories": [
+  ],
+  "require": {
+    "php": ">=7.2",
+    "phore/session": "*",
+    "phore/micro-app": "*"
+  },
+  "suggest": {
+    "ext-yaml": "Yaml encoding parsing",
+    "ext-sodium": "Encryption functions",
+    "ext-json": "Json encoding parsing"
+  },
+  "autoload": {
+    "psr-4": {
+      "Phore\\App\\Mod\\OAuth\\": "src/"
+    },
+    "files": [
+    ]
+  },
+  "minimum-stability": "dev",
+  "require-dev": {
+    "phpunit/phpunit": "*",
+
+  }
+}
