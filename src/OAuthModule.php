@@ -86,7 +86,7 @@ class OAuthModule implements AppModule
 
             $state = phore_random_str(12);
             $session->set(self::SESS_REQ_STATE, $state);
-            //$session->update();
+            $session->update();
 
             return new RedirectResponse($oAuthClient->getAuthorizeUrl(), [
                 "client_id" => $this->clientId,
