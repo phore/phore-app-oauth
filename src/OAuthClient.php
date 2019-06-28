@@ -62,7 +62,7 @@ class OAuthClient
 
     public function getUserInfo(string $token)
     {
-        return phore_http_request($this->getUserInfo())->withBearerAuth($token)->send()->getBodyJson();
+        return phore_http_request($this->getUserInfoUrl())->withBearerAuth($token)->send()->getBodyJson();
     }
 
 }
