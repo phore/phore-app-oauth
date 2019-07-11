@@ -76,11 +76,16 @@ class OAuthModule implements AppModule
             }
         });
 
-        $app->onEvent(App::EVENT_ON_REQUEST, function (Request $request, Session $session, OAuthClient $oAuthClient) use ($app) {
+        $app->onEvent(App::EVENT_ON_REQUEST, function (Request $request, Session $session) use ($app) {
             ignore_user_abort(true);
             if ($session->get(self::SESS_TOKEN_TIMEOUT, 0) > time())
                 return;
 
+            $oAuthClient = $app->oAuthClient;
+            if ( ! $oAuthClient instanceof OAuthClient)
+                throw new \InvalidArgumentException("No oAuthClient registered in di.");
+                
+            
             $backlinkUrl = $request->requestScheme . "://" . $request->httpHost . $request->requestPath;
             $session->set(self::SESS_LAST_BACKLINK_KEY, $backlinkUrl);
 
