@@ -1,6 +1,6 @@
 FROM infracamp/kickstart-flavor-gaia:testing
 
-ENV DEV_CONTAINER_NAME="t4s"
+ENV DEV_CONTAINER_NAME="phore-app-oauth"
 
 ADD / /opt
 RUN ["bash", "-c",  "chown -R user /opt"]
