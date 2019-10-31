@@ -15,22 +15,17 @@ class PublicKeyConverter
     public function getPemPublicKeyFromModExp($modulo, $exponent) : string
     {
         $modHex = $this->base64toHex($modulo);
-        $modHexPadded = $this->prepadSigned($modHex);
-
-        $modInteger = $this->encodeAsn1("02", $modHexPadded);
-
         $expHex = $this->base64toHex($exponent);
+
+        $modHexPadded = $this->prepadSigned($modHex);
         $expHexPadded = $this->prepadSigned($expHex);
 
-        $expInteger = $this->encodeAsn1("02", $expHexPadded);
-
-        $neSequence = $this->encodeAsn1("30", $modInteger.$expInteger);
-
-        $bitString = $this->encodeAsn1("03", "00".$neSequence);
-
-        $oidSequence = $this->getOidSequence();
-
-        $key = $this->encodeAsn1("30", $oidSequence.$bitString);
+        $oidSequence    = $this->getOidSequence();
+        $modInteger     = $this->encodeAsn1("02", $modHexPadded);
+        $expInteger     = $this->encodeAsn1("02", $expHexPadded);
+        $neSequence     = $this->encodeAsn1("30", $modInteger.$expInteger);
+        $bitString      = $this->encodeAsn1("03", "00".$neSequence);
+        $key            = $this->encodeAsn1("30", $oidSequence.$bitString);
 
         $base64Key = $this->hexToBase64($key);
 
