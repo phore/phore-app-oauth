@@ -46,4 +46,9 @@ class Test extends TestCase
         $result = phore_http_request($location[0])->withHeaders(["Cookie" => "PSID=$psid"])->send()->getBodyJson();
         $this->assertTrue($result["success"]);
     }
+
+    public function testValidateSignedToken()
+    {
+
+    }
 }

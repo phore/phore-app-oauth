@@ -14,7 +14,9 @@
     "phore/micro-app": "*",
     "phore/flash": "dev-master",
     "phore/http-client": "dev-master",
-    "ext-openssl": "*"
+    "ext-openssl": "*",
+    "phore/filesystem": "dev-master",
+    "ext-json": "*"
   },
   "suggest": {
   },

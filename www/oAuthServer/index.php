@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\JWK\JwkManager;
 use Phore\App\Mod\OAuth\OAuthModule;
 use Phore\MicroApp\App;
 use Phore\MicroApp\Auth\HttpBasicAuthMech;
@@ -50,7 +51,8 @@ $app->router->onGet("/oAuthServer/.well-known/openid-configuration", function (R
         "authorization_endpoint" => $host . "/oAuthServer/authorize",
         "token_endpoint" => $host . "/oAuthServer/token",
         "userinfo_endpoint" => $host . "/oAuthServer/userinfo",
-        "logout_endpoint" => $host . "/oAuthServer/logout"
+        "logout_endpoint" => $host . "/oAuthServer/logout",
+        "jwks_uri" => $host . "/oAuthServer/.well-known/jwks.json"
     ];
 });
 
@@ -71,7 +73,7 @@ $app->router->onPost("/oAuthServer/token", function () {
         "access_token" => "accessTokenTest",
         "token_type" => "Bearer",
         "expires_in" => 10,
-        "id_token" => "jwtTest"
+        "id_token" => "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6InRlc3RLaWQifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.ep8Q8NpC8gy6R7lmI_bRZXrZRQGI0ABtUprH9bB_eAEp5evxG7ps_0VkVqB8suRE6sWt3Kt4TRVc-_Easna78RXxdOFjvLipELk8MIM3PdWSVXMTRwkf6fkuXa3BkJkCztYFN81uvnZyIdO1t1BoXwcB9ERrsGpnsNWGgnB5F1jLRSrre6ji-GYq5Zwns16EXwrz3rRpN9QinbSZsP2lb0KBUymf3fNu7sT7R7y68lvKd62yzLEU4iTBiiLDKBMH4Nlk2wqt1bmvSeJBNfC7kGZU22er6Ny65itlKgi9xEb7KXQ1FKsd-o3wULWId7HgV1Hucq-TfIUz1QvT_HUtpA"
     ];
 });
 
@@ -89,6 +91,21 @@ $app->router->onPost("/oAuthServer/signin", function (Request $request) {
         echo "incorrect user/password";
     }
     return true;
+});
+
+$app->router->onGet("/oAuthServer/.well-known/jwks.json", function () {
+    $privateKey = openssl_pkey_get_private("file://private-key-rsa.pem");
+    $keyDetails = openssl_pkey_get_details($privateKey);
+    $jwks[] = $key = [
+        "kty" => "RSA",
+        "alg" => "RS512",
+        "kid" => "testKid",
+        "use" => "sig",
+        "n" => base64_encode($keyDetails["rsa"]["n"]),
+        "e" => base64_encode($keyDetails["rsa"]["e"]),
+        "cert" => $keyDetails["key"]
+    ];
+    return $jwks;
 });
 
 

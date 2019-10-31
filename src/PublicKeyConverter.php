@@ -17,6 +17,8 @@ class PublicKeyConverter
         $modHex = $this->base64toHex($modulo);
         $expHex = $this->base64toHex($exponent);
 
+        $length = strlen($modulo);
+
         $modHexPadded = $this->prepadSigned($modHex);
         $expHexPadded = $this->prepadSigned($expHex);
 
@@ -29,7 +31,7 @@ class PublicKeyConverter
 
         $base64Key = $this->hexToBase64($key);
 
-        $pemKey = "-----BEGIN PUBLIC KEY-----\n".chunk_split($base64Key,64,"\n")."-----END PUBLIC KEY-----\n";
+        $pemKey = "-----BEGIN PUBLIC KEY-----\n".chunk_split($base64Key,64, "\n")."-----END PUBLIC KEY-----\n";
 
         return $pemKey;
     }
@@ -45,7 +47,8 @@ class PublicKeyConverter
     }
 
     /**
-     * @param $type string 30:Sequence, 03:BitString, 02:Integer
+     * @param $type string
+     * 30:Sequence, 03:BitString, 02:Integer
      * @param $content
      * @return string
      */

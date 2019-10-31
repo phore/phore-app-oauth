@@ -9,6 +9,8 @@
 namespace Phore\App\Mod\OAuth;
 
 
+use Phore\Core\Exception\InvalidDataException;
+
 class OAuthClient
 {
 
@@ -17,10 +19,10 @@ class OAuthClient
 
     private $config;
 
-    public function __construct(string $clientId, string $clientKey)
+    public function __construct(string $clientId, string $clientSecret)
     {
         $this->clientId = $clientId;
-        $this->clientSecret = $clientKey;
+        $this->clientSecret = $clientSecret;
     }
 
     public function loadOpenIdConfig(string $host) : self
@@ -57,6 +59,61 @@ class OAuthClient
         ])->send()->getBodyJson();
 
         return $ret;
+    }
+
+    /**
+     * @param string $token
+     * @return bool
+     * @throws InvalidDataException
+     * @throws \Exception
+     */
+    public function validateToken(string $token) {
+        $tokenComponents = explode(".", $token);
+        $header = phore_json_decode(base64_decode($tokenComponents[0]));
+
+        $jwks = phore_http_request($this->config['jwks_uri'])->send()->getBodyJson();
+
+        $keyFound = false;
+        foreach ($jwks as $index => $key) {
+            if($key['kid'] === $header['kid']) {
+                $keyFound = true;
+                break;
+            }
+        }
+
+        if(!$keyFound) {
+            throw new InvalidDataException("No matching kid found in JWKS");
+        }
+
+        $modulo = $jwks[$index]['n'];
+        $exponent = $jwks[$index]['e'];
+
+        $converter = new PublicKeyConverter();
+        $pubKey = $converter->getPemPublicKeyFromModExp($modulo, $exponent);
+        $pub = openssl_pkey_get_public($pubKey);
+        $signature = base64_decode(str_replace(['-', '_', ''], ['+', '/', '='], $tokenComponents[2]));
+        $data = $tokenComponents[0].".".$tokenComponents[1];
+
+        if($jwks[$index]['alg'] !== $header['alg']) {
+            throw new InvalidDataException("Signing Algorithms jwks: {$jwks[$index]['alg']} and jwt: {$header['alg']} don't match.");
+        }
+
+        switch ($jwks[$index]['alg']) {
+            case "RS256":
+                $sigAlg = OPENSSL_ALGO_SHA256;
+                break;
+
+            case "RS512":
+                $sigAlg = OPENSSL_ALGO_SHA512;
+                break;
+
+            default:
+                throw new \InvalidArgumentException("Unsupported signing method: {$jwks[$index]['alg']}");
+        }
+        $verify = openssl_verify($data, $signature, $pub, $sigAlg);
+
+
+        return $verify;
     }
 
 

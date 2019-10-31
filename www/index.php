@@ -35,7 +35,7 @@ $app->define("session", function (SessionHandler $sessionHandler) {
     return $session;
 });
 
-$app->addModule(new OAuthModule("test_client", "test", "http://localhost/oAuthServer"));
+$app->addModule(new OAuthModule("test_client", "test_secret", "http://localhost/oAuthServer"));
 
 /**
  ** Define Routes

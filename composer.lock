@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d4b24613e57bd379f3d63687e6f94f6c",
+    "content-hash": "eb31285bc617dee9f2a79bd770e749e8",
     "packages": [
         {
             "name": "phore/core",
@@ -107,6 +107,53 @@
                 "di"
             ],
             "time": "2018-07-10T05:48:13+00:00"
+        },
+        {
+            "name": "phore/filesystem",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phore/phore-filesystem.git",
+                "reference": "5f75dc858b225bb2b9ea902b19995c79b26b3583"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phore/phore-filesystem/zipball/5f75dc858b225bb2b9ea902b19995c79b26b3583",
+                "reference": "5f75dc858b225bb2b9ea902b19995c79b26b3583",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-yaml": "*",
+                "phore/core": "dev-master",
+                "php": ">7.1",
+                "psr/http-message": "^1.0@dev"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.0@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Phore\\FileSystem\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias Leuffen",
+                    "email": "leuffen@continue.de"
+                }
+            ],
+            "description": "Acces files layer",
+            "homepage": "http://infracamp.org/project/phore",
+            "time": "2019-10-15T23:47:27+00:00"
         },
         {
             "name": "phore/flash",
@@ -347,6 +394,56 @@
                 "psr"
             ],
             "time": "2019-10-04T14:07:35+00:00"
+        },
+        {
+            "name": "psr/http-message",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-message.git",
+                "reference": "efd67d1dc14a7ef4fc4e518e7dee91c271d524e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/efd67d1dc14a7ef4fc4e518e7dee91c271d524e4",
+                "reference": "efd67d1dc14a7ef4fc4e518e7dee91c271d524e4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP messages",
+            "homepage": "https://github.com/php-fig/http-message",
+            "keywords": [
+                "http",
+                "http-message",
+                "psr",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2019-08-29T13:16:46+00:00"
         }
     ],
     "packages-dev": [
@@ -1871,13 +1968,15 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "phore/flash": 20,
-        "phore/http-client": 20
+        "phore/http-client": 20,
+        "phore/filesystem": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.2",
-        "ext-openssl": "*"
+        "ext-openssl": "*",
+        "ext-json": "*"
     },
     "platform-dev": []
 }

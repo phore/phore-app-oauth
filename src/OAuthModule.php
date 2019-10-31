@@ -10,6 +10,7 @@ namespace Phore\App\Mod\OAuth;
 
 
 
+use Phore\Core\Exception\InvalidDataException;
 use Phore\MicroApp\App;
 use Phore\MicroApp\AppModule;
 use Phore\App\Mod\OAuth\OAuthClient;
@@ -57,16 +58,20 @@ class OAuthModule implements AppModule
 
         $app->onEvent(App::EVENT_ON_REQUEST, function (Request $request) use ($app) {
             if ($request->GET->has("code") && $request->GET->has("state") && $request->requestMethod == "GET") {
-                $session = $app->session;
                 /* @var $session Session */
+                $session = $app->session;
+                /* @var $oAuthClient \Phore\App\Mod\OAuth\OAuthClient */
                 $oAuthClient = $app->oAuthClient;
-                /* @var $oAuthClient \App\OAuthClient */
+
 
                 if ($request->GET->get("state") !== $session->get(self::SESS_REQ_STATE))
                     throw new \InvalidArgumentException("Session state invalid: {$request->GET->get("state")} !== '{$session->get(self::SESS_REQ_STATE)}'");
 
                 $token = $oAuthClient->getToken($request->GET->get("code"), $session->get(self::SESS_LAST_BACKLINK_KEY));
 
+                if(!$oAuthClient->validateToken($token['id_token'])) {
+                    throw new InvalidDataException("token signature doesnt match public key.");
+                }
                 //TODO: Check access rights, issuer
 
                 $session->setOauthToken($token["access_token"]);
