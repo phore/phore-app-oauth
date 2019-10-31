@@ -12,7 +12,7 @@ namespace Phore\App\Mod\OAuth;
 
 use Phore\MicroApp\App;
 use Phore\MicroApp\AppModule;
-use Phore\MicroApp\Exception\AuthRequiredException;
+use Phore\App\Mod\OAuth\OAuthClient;
 use Phore\MicroApp\Response\RedirectResponse;
 use Phore\MicroApp\Type\Request;
 use Phore\Session\Session;
@@ -67,6 +67,8 @@ class OAuthModule implements AppModule
 
                 $token = $oAuthClient->getToken($request->GET->get("code"), $session->get(self::SESS_LAST_BACKLINK_KEY));
 
+                //TODO: Check access rights, issuer
+
                 $session->setOauthToken($token["access_token"]);
                 $session->set(self::SESS_TOKEN_TIMEOUT, time() + $token["expires_in"]);
 
@@ -84,8 +86,8 @@ class OAuthModule implements AppModule
             $oAuthClient = $app->oAuthClient;
             if ( ! $oAuthClient instanceof OAuthClient)
                 throw new \InvalidArgumentException("No oAuthClient registered in di.");
-                
-            
+
+
             $backlinkUrl = $request->requestScheme . "://" . $request->httpHost . $request->requestPath;
             $session->set(self::SESS_LAST_BACKLINK_KEY, $backlinkUrl);
 

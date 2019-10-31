@@ -11,7 +11,10 @@
   "require": {
     "php": ">=7.2",
     "phore/session": "*",
-    "phore/micro-app": "*"
+    "phore/micro-app": "*",
+    "phore/flash": "dev-master",
+    "phore/http-client": "dev-master",
+    "ext-openssl": "*"
   },
   "suggest": {
   },
@@ -20,6 +23,7 @@
       "Phore\\App\\Mod\\OAuth\\": "src/"
     },
     "files": [
+      "config.php"
     ]
   },
   "minimum-stability": "dev",
