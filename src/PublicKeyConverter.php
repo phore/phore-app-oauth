@@ -91,12 +91,11 @@ class PublicKeyConverter
 
     private function prepadSigned(string $hex) {
         $msb = substr($hex, 0, 1);
-        if($msb < "0" || $msb > "7") {
+        if($msb > "7") {
             return "00".$hex;
         } else {
             return $hex;
         }
-        return $hex;
     }
 
 }
