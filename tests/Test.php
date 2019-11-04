@@ -47,8 +47,4 @@ class Test extends TestCase
         $this->assertTrue($result["success"]);
     }
 
-    public function testValidateSignedToken()
-    {
-
-    }
 }
