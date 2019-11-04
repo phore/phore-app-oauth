@@ -12,6 +12,7 @@ use Phore\Session\SessionHandler;
 
 
 require __DIR__ . "/../vendor/autoload.php";
+require __DIR__ . "/config.php";
 
 $app = new App();
 $app->activateExceptionErrorHandlers();
