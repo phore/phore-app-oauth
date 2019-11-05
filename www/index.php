@@ -12,7 +12,6 @@ use Phore\Session\SessionHandler;
 
 
 require __DIR__ . "/../vendor/autoload.php";
-require __DIR__ . "/config.php";
 
 $app = new App();
 $app->activateExceptionErrorHandlers();
@@ -25,7 +24,7 @@ $app->setResponseHandler(new JsonResponseHandler());
 $app->acl->addRule(\aclRule()->route("/*")->ALLOW());
 
 $app->define("sessionHandler", function() {
-    return new SessionHandler(REDIS_CONNECT);
+    return new SessionHandler("redis://redis");
 });
 
 /**

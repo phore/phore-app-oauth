@@ -16,6 +16,7 @@ class OAuthClient
 
     private $clientId;
     private $clientSecret;
+    private $alg = "RS256";
 
     private $config;
 
@@ -55,7 +56,8 @@ class OAuthClient
             "client_id" => $this->clientId,
             "client_secret" => $this->clientSecret,
             "redirect_uri" => $lastRedirectUri,
-            "code" => $code
+            "code" => $code,
+            "alg" =>$this->alg
         ])->send()->getBodyJson();
 
         return $ret;

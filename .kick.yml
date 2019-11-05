@@ -3,19 +3,11 @@ from: "infracamp/kickstart-flavor-gaia:testing"
 
 apache_fallback_resource: "/index.php"
 
-config_file:
-  template: "/opt/www/config.php.dist"
-  target: "/opt/www/config.php"
-
 command:
   build:
     - "composer update"
-    - "sudo scripts/build.sh"
 
   test:
     - "vendor/bin/phpunit tests/"
 
   dev:
-    - "sudo scripts/startup.sh"
-
-
