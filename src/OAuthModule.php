@@ -69,7 +69,7 @@ class OAuthModule implements AppModule
 
                 $token = $oAuthClient->getToken($request->GET->get("code"), $session->get(self::SESS_LAST_BACKLINK_KEY));
 
-                if(!$oAuthClient->validateToken($token['id_token'])) {
+                if($oAuthClient->validateToken($token['id_token']) !== true) {
                     throw new InvalidDataException("token signature doesnt match public key.");
                 }
                 //TODO: Check access rights, issuer

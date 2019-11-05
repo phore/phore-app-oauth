@@ -69,13 +69,43 @@ class OAuthClient
      */
     public function validateToken(string $token) {
         $tokenComponents = explode(".", $token);
+        if(count($tokenComponents) !== 3) {
+            throw new \InvalidArgumentException("Malformed or unsupported JWT");
+        }
         $header = phore_json_decode(base64_decode($tokenComponents[0]));
+        $data = $tokenComponents[0].".".$tokenComponents[1];
+        $signature = base64_decode(str_replace(['-', '_', ''], ['+', '/', '='], $tokenComponents[2]));
+
+        $headerAlg = phore_pluck('alg', $header, new \InvalidArgumentException("Invalid token header: alg missing."));
+
+        switch ($headerAlg) {
+            case "HS256":
+                $hash = hash_hmac("sha256", $data, $this->clientSecret, true);
+                if(hash_equals($signature, hash_hmac("sha256", $data, $this->clientSecret, true))) {
+                    return true;
+                }
+                return false;
+            case "HS512":
+                if(hash_equals($signature, hash_hmac("sha512", $data, $this->clientSecret, true))) {
+                    return true;
+                }
+                return false;
+            case "RS256":
+                $rsaSignatureAlg = OPENSSL_ALGO_SHA256;
+                break;
+            case "RS512":
+                $rsaSignatureAlg = OPENSSL_ALGO_SHA512;
+                break;
+            default:
+                throw new \InvalidArgumentException("Unsupported signing method: $headerAlg");
+        }
 
         $jwks = phore_http_request($this->config['jwks_uri'])->send()->getBodyJson();
 
         $keyFound = false;
         foreach ($jwks as $index => $key) {
-            if($key['kid'] === $header['kid']) {
+            $kid = phore_pluck('kid', $key);
+            if($kid === $header['kid']) {
                 $keyFound = true;
                 break;
             }
@@ -85,35 +115,22 @@ class OAuthClient
             throw new InvalidDataException("No matching kid found in JWKS");
         }
 
-        $modulo = $jwks[$index]['n'];
-        $exponent = $jwks[$index]['e'];
+        $jwk = $jwks[$index];
+
+        if(phore_pluck('alg', $jwk, new \InvalidArgumentException("Invalid jwk: alg missing.")) !== $headerAlg) {
+            throw new InvalidDataException("Signing Algorithms jwks: {$jwks[$index]['alg']} and jwt: $headerAlg don't match.");
+        }
+
+        $modulo = phore_pluck('n',$jwk, new \InvalidArgumentException("Invalid jwk: n missing."));
+        $exponent = phore_pluck('e',$jwk, new \InvalidArgumentException("Invalid jwk: e missing."));
 
         $converter = new PublicKeyConverter();
         $pubKey = $converter->getPemPublicKeyFromModExp($modulo, $exponent);
         $pub = openssl_pkey_get_public($pubKey);
-        $signature = base64_decode(str_replace(['-', '_', ''], ['+', '/', '='], $tokenComponents[2]));
-        $data = $tokenComponents[0].".".$tokenComponents[1];
 
-        if($jwks[$index]['alg'] !== $header['alg']) {
-            throw new InvalidDataException("Signing Algorithms jwks: {$jwks[$index]['alg']} and jwt: {$header['alg']} don't match.");
-        }
+        $verify = openssl_verify($data, $signature, $pub, $rsaSignatureAlg);
+        return filter_var($verify, FILTER_VALIDATE_BOOLEAN);
 
-        switch ($jwks[$index]['alg']) {
-            case "RS256":
-                $sigAlg = OPENSSL_ALGO_SHA256;
-                break;
-
-            case "RS512":
-                $sigAlg = OPENSSL_ALGO_SHA512;
-                break;
-
-            default:
-                throw new \InvalidArgumentException("Unsupported signing method: {$jwks[$index]['alg']}");
-        }
-        $verify = openssl_verify($data, $signature, $pub, $sigAlg);
-
-
-        return $verify;
     }
 
 

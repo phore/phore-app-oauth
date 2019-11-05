@@ -73,7 +73,8 @@ $app->router->onPost("/oAuthServer/token", function () {
         "access_token" => "accessTokenTest",
         "token_type" => "Bearer",
         "expires_in" => 10,
-        "id_token" => "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6InRlc3RLaWQifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.ep8Q8NpC8gy6R7lmI_bRZXrZRQGI0ABtUprH9bB_eAEp5evxG7ps_0VkVqB8suRE6sWt3Kt4TRVc-_Easna78RXxdOFjvLipELk8MIM3PdWSVXMTRwkf6fkuXa3BkJkCztYFN81uvnZyIdO1t1BoXwcB9ERrsGpnsNWGgnB5F1jLRSrre6ji-GYq5Zwns16EXwrz3rRpN9QinbSZsP2lb0KBUymf3fNu7sT7R7y68lvKd62yzLEU4iTBiiLDKBMH4Nlk2wqt1bmvSeJBNfC7kGZU22er6Ny65itlKgi9xEb7KXQ1FKsd-o3wULWId7HgV1Hucq-TfIUz1QvT_HUtpA"
+        "id_token" => "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6InRlc3RLaWQifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.ep8Q8NpC8gy6R7lmI_bRZXrZRQGI0ABtUprH9bB_eAEp5evxG7ps_0VkVqB8suRE6sWt3Kt4TRVc-_Easna78RXxdOFjvLipELk8MIM3PdWSVXMTRwkf6fkuXa3BkJkCztYFN81uvnZyIdO1t1BoXwcB9ERrsGpnsNWGgnB5F1jLRSrre6ji-GYq5Zwns16EXwrz3rRpN9QinbSZsP2lb0KBUymf3fNu7sT7R7y68lvKd62yzLEU4iTBiiLDKBMH4Nlk2wqt1bmvSeJBNfC7kGZU22er6Ny65itlKgi9xEb7KXQ1FKsd-o3wULWId7HgV1Hucq-TfIUz1QvT_HUtpA",
+        "symmetric_token" => "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.UC-Hj59_0b7KRPDqlh9zSO4TdXx0CMUE7TIHy9jng8c"
     ];
 });
 

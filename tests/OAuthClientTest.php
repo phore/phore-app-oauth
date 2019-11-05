@@ -54,6 +54,12 @@ class OAuthClientTest extends TestCase
     public function testValidateToken()
     {
         $token = $this->client->getToken("testCode", "testURL");
-        $this->assertEquals(1, $this->client->validateToken($token['id_token']));
+        $this->assertTrue($this->client->validateToken($token['id_token']));
+    }
+
+    public function testValidateSymmetricToken()
+    {
+        $token = $this->client->getToken("testCode", "testURL");
+        $this->assertTrue($this->client->validateToken($token['symmetric_token']));
     }
 }
