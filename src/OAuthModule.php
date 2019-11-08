@@ -24,6 +24,8 @@ class OAuthModule implements AppModule
     private $clientId;
     private $clientKey;
     private $openIdHost;
+    private $clientScopes;
+
 
 
     const SESS_LAST_BACKLINK_KEY = "_oauth_last_backlink_url";
@@ -31,11 +33,12 @@ class OAuthModule implements AppModule
     const SESS_TOKEN_TIMEOUT = "_oauth_token_timeout";
     const SESS_REQ_STATE = "_oauth_req_state";
 
-    public function __construct($clientId, $clientKey, $openIdHost)
+    public function __construct($clientId, $clientKey, $openIdHost, array $clientScopes=["openid"])
     {
         $this->clientId = $clientId;
         $this->clientKey = $clientKey;
         $this->openIdHost = $openIdHost;
+        $this->clientScopes = $clientScopes;
     }
 
     /**
@@ -52,6 +55,7 @@ class OAuthModule implements AppModule
     {
         $app->define("oAuthClient", function () {
             $client = new OAuthClient($this->clientId, $this->clientKey);
+            $client->addScopes($this->clientScopes);
             $client->loadOpenIdConfig($this->openIdHost);
             return $client;
         });
@@ -88,6 +92,7 @@ class OAuthModule implements AppModule
             if ($session->get(self::SESS_TOKEN_TIMEOUT, 0) > time())
                 return;
 
+            /* @var $oAuthClient \Phore\App\Mod\OAuth\OAuthClient */
             $oAuthClient = $app->oAuthClient;
             if ( ! $oAuthClient instanceof OAuthClient)
                 throw new \InvalidArgumentException("No oAuthClient registered in di.");
@@ -103,7 +108,7 @@ class OAuthModule implements AppModule
             return new RedirectResponse($oAuthClient->getAuthorizeUrl(), [
                 "client_id" => $this->clientId,
                 "response_type" => "code",
-                "scopes" => "",
+                "scope" => $oAuthClient->getScopes(),
                 "redirect_uri" => $request->requestScheme . "://" . $request->httpHost . $request->requestPath,
                 "state" => $state
             ]);

@@ -17,6 +17,7 @@ class OAuthClient
     private $clientId;
     private $clientSecret;
     private $alg = "RS256";
+    private $scopes = [];
 
     private $config;
 
@@ -133,6 +134,14 @@ class OAuthClient
         $verify = openssl_verify($data, $signature, $pub, $rsaSignatureAlg);
         return filter_var($verify, FILTER_VALIDATE_BOOLEAN);
 
+    }
+
+    public function getScopes() {
+        return implode(" ", $this->scopes);
+    }
+
+    public function addScopes(array $scopes) {
+        $this->scopes = array_unique(array_merge($this->scopes, $scopes));
     }
 
 

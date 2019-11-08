@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phore/phore-core.git",
-                "reference": "bcbdca3b7fd327c517ada157ce846807ac6e34b4"
+                "reference": "32268caad68f8a0db7db6b9b74671e09c92cfaf1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phore/phore-core/zipball/bcbdca3b7fd327c517ada157ce846807ac6e34b4",
-                "reference": "bcbdca3b7fd327c517ada157ce846807ac6e34b4",
+                "url": "https://api.github.com/repos/phore/phore-core/zipball/32268caad68f8a0db7db6b9b74671e09c92cfaf1",
+                "reference": "32268caad68f8a0db7db6b9b74671e09c92cfaf1",
                 "shasum": ""
             },
             "require": {
@@ -55,7 +55,7 @@
             ],
             "description": "Phore core library",
             "homepage": "https://infracamp.org/project/phore",
-            "time": "2019-10-15T23:46:50+00:00"
+            "time": "2019-11-07T18:12:42+00:00"
         },
         {
             "name": "phore/di-base",
@@ -204,12 +204,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phore/phore-http-client.git",
-                "reference": "ec5becb5706e67b19e3079f4d7a3cc33b6db574c"
+                "reference": "af6897993ffaee2fceb9f2e712c6d4cc52921401"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phore/phore-http-client/zipball/ec5becb5706e67b19e3079f4d7a3cc33b6db574c",
-                "reference": "ec5becb5706e67b19e3079f4d7a3cc33b6db574c",
+                "url": "https://api.github.com/repos/phore/phore-http-client/zipball/af6897993ffaee2fceb9f2e712c6d4cc52921401",
+                "reference": "af6897993ffaee2fceb9f2e712c6d4cc52921401",
                 "shasum": ""
             },
             "require": {
@@ -252,7 +252,7 @@
                 "Keyword1",
                 "Keyword2"
             ],
-            "time": "2019-10-22T10:26:29+00:00"
+            "time": "2019-11-06T21:39:50+00:00"
         },
         {
             "name": "phore/micro-app",
@@ -1123,12 +1123,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "62cd2771050dbd804185d17f320496d2f080964e"
+                "reference": "4501eec99dc584421c9a27a2cfa9340e78c4bb79"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/62cd2771050dbd804185d17f320496d2f080964e",
-                "reference": "62cd2771050dbd804185d17f320496d2f080964e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4501eec99dc584421c9a27a2cfa9340e78c4bb79",
+                "reference": "4501eec99dc584421c9a27a2cfa9340e78c4bb79",
                 "shasum": ""
             },
             "require": {
@@ -1198,7 +1198,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-11-05T08:48:51+00:00"
+            "time": "2019-11-06T13:14:29+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

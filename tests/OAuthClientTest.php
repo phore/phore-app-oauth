@@ -62,4 +62,10 @@ class OAuthClientTest extends TestCase
         $token = $this->client->getToken("testCode", "testURL");
         $this->assertTrue($this->client->validateToken($token['symmetric_token']));
     }
+
+    public function testAddAndGetScopes()
+    {
+        $this->client->addScopes(["openid", "profile", "profile"]);
+        $this->assertEquals("openid profile",$this->client->getScopes());
+    }
 }
