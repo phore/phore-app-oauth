@@ -78,6 +78,8 @@ class OAuthModule implements AppModule
                 }
                 //TODO: Check access rights, issuer
 
+                $session->set("id_token", $token['id_token']);
+
                 $session->setOauthToken($token["access_token"]);
                 $session->set(self::SESS_TOKEN_TIMEOUT, time() + $token["expires_in"]);
 

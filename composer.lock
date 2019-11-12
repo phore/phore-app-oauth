@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phore/phore-core.git",
-                "reference": "32268caad68f8a0db7db6b9b74671e09c92cfaf1"
+                "reference": "6c0a97b1fac53d9c4fe12dae72aba6aabedd7807"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phore/phore-core/zipball/32268caad68f8a0db7db6b9b74671e09c92cfaf1",
-                "reference": "32268caad68f8a0db7db6b9b74671e09c92cfaf1",
+                "url": "https://api.github.com/repos/phore/phore-core/zipball/6c0a97b1fac53d9c4fe12dae72aba6aabedd7807",
+                "reference": "6c0a97b1fac53d9c4fe12dae72aba6aabedd7807",
                 "shasum": ""
             },
             "require": {
@@ -55,7 +55,7 @@
             ],
             "description": "Phore core library",
             "homepage": "https://infracamp.org/project/phore",
-            "time": "2019-11-07T18:12:42+00:00"
+            "time": "2019-11-08T19:16:33+00:00"
         },
         {
             "name": "phore/di-base",
@@ -449,7 +449,7 @@
     "packages-dev": [
         {
             "name": "doctrine/instantiator",
-            "version": "dev-master",
+            "version": "1.3.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/instantiator.git",
@@ -1123,12 +1123,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "4501eec99dc584421c9a27a2cfa9340e78c4bb79"
+                "reference": "a98ff6bb0060f2ae1717f8c556db3ab808558119"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4501eec99dc584421c9a27a2cfa9340e78c4bb79",
-                "reference": "4501eec99dc584421c9a27a2cfa9340e78c4bb79",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a98ff6bb0060f2ae1717f8c556db3ab808558119",
+                "reference": "a98ff6bb0060f2ae1717f8c556db3ab808558119",
                 "shasum": ""
             },
             "require": {
@@ -1198,7 +1198,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-11-06T13:14:29+00:00"
+            "time": "2019-11-08T23:58:54+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
