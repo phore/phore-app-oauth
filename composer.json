@@ -12,10 +12,10 @@
     "php": ">=7.2",
     "phore/session": "*",
     "phore/micro-app": "*",
-    "phore/flash": "dev-master",
-    "phore/http-client": "dev-master",
+    "phore/flash": "*",
+    "phore/http-client": "*",
     "ext-openssl": "*",
-    "phore/filesystem": "dev-master",
+    "phore/filesystem": "*",
     "ext-json": "*"
   },
   "suggest": {
