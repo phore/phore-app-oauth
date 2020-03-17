@@ -26,13 +26,11 @@ class OAuthModule implements AppModule
     private $openIdHost;
     private $clientScopes;
 
-
-
     const SESS_LAST_BACKLINK_KEY = "_oauth_last_backlink_url";
     const SESS_TOKEN = "_oauth_token";
     const SESS_TOKEN_TIMEOUT = "_oauth_token_timeout";
     const SESS_REQ_STATE = "_oauth_req_state";
-
+/*
     public function __construct($clientId, $clientKey, $openIdHost, array $clientScopes=["openid"])
     {
         $this->clientId = $clientId;
@@ -40,7 +38,23 @@ class OAuthModule implements AppModule
         $this->openIdHost = $openIdHost;
         $this->clientScopes = $clientScopes;
     }
+*/
+    public function __construct($uri)
+    {
+        $uriParts = phore_parse_url($uri);
+        if($uriParts->scheme !== "https")
+            throw new \InvalidArgumentException("Invalid URI scheme in '$uri'");
+        $this->clientId = $uriParts->getQueryVal('client_id', new \InvalidArgumentException("Param 'client_id' not defined in oauth2 URI '$uri'"));
+        $this->clientKey = $uriParts->getQueryVal('client_secret', null);
+        if($this->clientKey === null) {
+            $pathToSecret = $uriParts->getQueryVal('client_secret_from_file', new \InvalidArgumentException("Param 'client_id' not defined in oauth2 URI '$uri'"));
+            $this->clientKey = phore_file($pathToSecret)->get_contents();
 
+        }
+        $this->openIdHost = substr($uri, 0, strpos($uri, "?"));
+        $this->clientScopes = $uriParts->getQueryVal('scopes', []);
+
+    }
     /**
      * Called just after adding this to a app by calling
      * `$app->addModule(new SomeModule());`
