@@ -106,7 +106,7 @@ $app->router->onGet("/oAuthServer/.well-known/jwks.json", function () {
         "e" => base64_encode($keyDetails["rsa"]["e"]),
         "cert" => $keyDetails["key"]
     ];
-    return $jwks;
+    return ['keys' => $jwks];
 });
 
 

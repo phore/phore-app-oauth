@@ -105,8 +105,12 @@ class OAuthClient
 
         $jwks = phore_http_request($this->config['jwks_uri'])->send()->getBodyJson();
 
+        if(!array_key_exists('keys', $jwks)) {
+            $jwks = ['keys' => $jwks];
+        }
+
         $keyFound = false;
-        foreach ($jwks as $index => $key) {
+        foreach ($jwks['keys'] as $index => $key) {
             $kid = phore_pluck('kid', $key);
             if($kid === $header['kid']) {
                 $keyFound = true;
@@ -118,10 +122,10 @@ class OAuthClient
             throw new InvalidDataException("No matching kid found in JWKS");
         }
 
-        $jwk = $jwks[$index];
+        $jwk = $jwks['keys'][$index];
 
         if(phore_pluck('alg', $jwk, new \InvalidArgumentException("Invalid jwk: alg missing.")) !== $headerAlg) {
-            throw new InvalidDataException("Signing Algorithms jwks: {$jwks[$index]['alg']} and jwt: $headerAlg don't match.");
+            throw new InvalidDataException("Signing Algorithms jwks: {$jwks['keys'][$index]['alg']} and jwt: $headerAlg don't match.");
         }
 
         $modulo = phore_pluck('n',$jwk, new \InvalidArgumentException("Invalid jwk: n missing."));
