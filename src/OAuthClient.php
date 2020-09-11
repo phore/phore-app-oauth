@@ -139,8 +139,8 @@ class OAuthClient
             return true; // Signature correct
         if ($verify === 0);
             return false; // Signature invalid
-        if ($verify === -1)
-            throw new \InvalidArgumentException("Openssl error on verifying signature: " . openssl_error_string());
+        // Any openssl error
+        throw new \InvalidArgumentException("Openssl error on verifying signature: " . openssl_error_string());
     }
 
     public function getScopes() {
