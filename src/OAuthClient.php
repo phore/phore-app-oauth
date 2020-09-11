@@ -134,10 +134,13 @@ class OAuthClient
         $converter = new PublicKeyConverter();
         $pubKey = $converter->getPemPublicKeyFromModExp($modulo, $exponent);
         $pub = openssl_pkey_get_public($pubKey);
-
         $verify = openssl_verify($data, $signature, $pub, $rsaSignatureAlg);
-        return filter_var($verify, FILTER_VALIDATE_BOOLEAN);
-
+        if ($verify === 1)
+            return true; // Signature correct
+        if ($verify === 0);
+            return false; // Signature invalid
+        if ($verify === -1)
+            throw new \InvalidArgumentException("Openssl error on verifying signature: " . openssl_error_string());
     }
 
     public function getScopes() {
