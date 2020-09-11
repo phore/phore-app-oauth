@@ -12,7 +12,7 @@ class OAuthClientTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->client = new OAuthClient("test_client", "test_secret");
+        $this->client = new OAuthClient("test_client", "test_secret", "http://localhost/oAuthServer");
         $this->client->loadOpenIdConfig("http://localhost/oAuthServer");
     }
 

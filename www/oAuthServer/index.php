@@ -73,7 +73,7 @@ $app->router->onPost("/oAuthServer/token", function () {
         "access_token" => "accessTokenTest",
         "token_type" => "Bearer",
         "expires_in" => 10,
-        "id_token" => "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6InRlc3RLaWQifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.ep8Q8NpC8gy6R7lmI_bRZXrZRQGI0ABtUprH9bB_eAEp5evxG7ps_0VkVqB8suRE6sWt3Kt4TRVc-_Easna78RXxdOFjvLipELk8MIM3PdWSVXMTRwkf6fkuXa3BkJkCztYFN81uvnZyIdO1t1BoXwcB9ERrsGpnsNWGgnB5F1jLRSrre6ji-GYq5Zwns16EXwrz3rRpN9QinbSZsP2lb0KBUymf3fNu7sT7R7y68lvKd62yzLEU4iTBiiLDKBMH4Nlk2wqt1bmvSeJBNfC7kGZU22er6Ny65itlKgi9xEb7KXQ1FKsd-o3wULWId7HgV1Hucq-TfIUz1QvT_HUtpA",
+        "id_token" => "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6InRlc3RLaWQifQ.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L29BdXRoU2VydmVyIiwic3ViIjoiMTIzNDU2Nzg5MCIsIm5hbWUiOiJKb2huIERvZSIsImFkbWluIjp0cnVlLCJpYXQiOjE1MTYyMzkwMjIsImV4cCI6MjUzNDAyMzAwNzk5LCJhdWQiOiJ0ZXN0X2NsaWVudCJ9.gQEuplrLFxqlkLF6EVqNdJg0IR1qFI820dosPMg15IM32mlUs5yuZYkQHbtj3WUUFfV12FpZs7dcoA_ZZnPAOsHTlt2dmbqDUKHClsuSa8p7FpqkSBMrh0wZN3KvUpqcuqr42FZGfB49Xdg5nlUM2iIBO9MMU7VRFoe-doh0Cx1WkIg6HfUoth7_mCycdC5YRazMEskY7B2u0meIK7XJmQWLB6iCHgx1E6EC_Vwmh0odEy9XBFo4kCR9_iSBt5i97L3VikVYsXOeYj3Xs5TR0xxODvswkqtdx78EGB18Xo0B4ksSaEkguFqFAKLUgfFOFWeMFJ5yxdz3kGoRjiuo5A",
         "symmetric_token" => "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.UC-Hj59_0b7KRPDqlh9zSO4TdXx0CMUE7TIHy9jng8c"
     ];
 });
@@ -102,8 +102,8 @@ $app->router->onGet("/oAuthServer/.well-known/jwks.json", function () {
         "alg" => "RS512",
         "kid" => "testKid",
         "use" => "sig",
-        "n" => base64_encode($keyDetails["rsa"]["n"]),
-        "e" => base64_encode($keyDetails["rsa"]["e"]),
+        "n" => base64urlEncode($keyDetails["rsa"]["n"]),
+        "e" => base64urlEncode($keyDetails["rsa"]["e"]),
         "cert" => $keyDetails["key"]
     ];
     return ['keys' => $jwks];

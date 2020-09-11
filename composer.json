@@ -16,7 +16,8 @@
     "phore/http-client": "*",
     "ext-openssl": "*",
     "phore/filesystem": "*",
-    "ext-json": "*"
+    "ext-json": "*",
+    "phore/jwt": "*"
   },
   "suggest": {
   },

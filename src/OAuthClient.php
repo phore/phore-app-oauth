@@ -10,10 +10,15 @@ namespace Phore\App\Mod\OAuth;
 
 
 use Phore\Core\Exception\InvalidDataException;
+use Phore\JWT\JWK\JwkFactory;
+use Phore\JWT\JWK\Jwks;
+use Phore\JWT\JWK\RsaPublicKey;
+use Phore\JWT\JwsDecoder;
 
 class OAuthClient
 {
 
+    private $issuer;
     private $clientId;
     private $clientSecret;
     private $alg = "RS256";
@@ -21,10 +26,11 @@ class OAuthClient
 
     private $config;
 
-    public function __construct(string $clientId, string $clientSecret)
+    public function __construct(string $clientId, string $clientSecret, string $issuer)
     {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
+        $this->issuer = $issuer;
     }
 
     public function loadOpenIdConfig(string $host) : self
@@ -106,7 +112,7 @@ class OAuthClient
         $jwks = phore_http_request($this->config['jwks_uri'])->send()->getBodyJson();
 
         if(!array_key_exists('keys', $jwks)) {
-            $jwks = ['keys' => $jwks];
+            throw new InvalidDataException("Malformed JWKS");
         }
 
         $keyFound = false;
@@ -124,19 +130,29 @@ class OAuthClient
 
         $jwk = $jwks['keys'][$index];
 
-        if(phore_pluck('alg', $jwk, new \InvalidArgumentException("Invalid jwk: alg missing.")) !== $headerAlg) {
-            throw new InvalidDataException("Signing Algorithms jwks: {$jwks['keys'][$index]['alg']} and jwt: $headerAlg don't match.");
-        }
+        $rsaPublicKey = new RsaPublicKey(base64urlDecode($jwk['n'] ?? ''), base64urlDecode($jwk['e'] ?? ''));
+        $rsaPublicKey->setKeyId($kid);
 
-        $modulo = phore_pluck('n',$jwk, new \InvalidArgumentException("Invalid jwk: n missing."));
-        $exponent = phore_pluck('e',$jwk, new \InvalidArgumentException("Invalid jwk: e missing."));
+        $decoder = new JwsDecoder();
+        $decoder->addJwk($rsaPublicKey);
+        $decoder->setClientId($this->clientId);
+        $decoder->setIssuer($this->issuer);
+        $decoder->decode($token);
+        return true;
 
-        $converter = new PublicKeyConverter();
-        $pubKey = $converter->getPemPublicKeyFromModExp($modulo, $exponent);
-        $pub = openssl_pkey_get_public($pubKey);
-
-        $verify = openssl_verify($data, $signature, $pub, $rsaSignatureAlg);
-        return filter_var($verify, FILTER_VALIDATE_BOOLEAN);
+//        if(phore_pluck('alg', $jwk, new \InvalidArgumentException("Invalid jwk: alg missing.")) !== $headerAlg) {
+//            throw new InvalidDataException("Signing Algorithms jwks: {$jwks['keys'][$index]['alg']} and jwt: $headerAlg don't match.");
+//        }
+//
+//        $modulo = phore_pluck('n',$jwk, new \InvalidArgumentException("Invalid jwk: n missing."));
+//        $exponent = phore_pluck('e',$jwk, new \InvalidArgumentException("Invalid jwk: e missing."));
+//
+//        $converter = new PublicKeyConverter();
+//        $pubKey = $converter->getPemPublicKeyFromModExp($modulo, $exponent);
+//        $pub = openssl_pkey_get_public($pubKey);
+//
+//        $verify = openssl_verify($data, $signature, $pub, $rsaSignatureAlg);
+//        return filter_var($verify, FILTER_VALIDATE_BOOLEAN);
 
     }
 
