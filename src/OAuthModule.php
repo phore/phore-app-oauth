@@ -54,7 +54,7 @@ class OAuthModule implements AppModule
     public function register(App $app)
     {
         $app->define("oAuthClient", function () {
-            $client = new OAuthClient($this->clientId, $this->clientKey, "http://localhost/oAuthServer");
+            $client = new OAuthClient($this->clientId, $this->clientKey, $this->openIdHost);
             $client->addScopes($this->clientScopes);
             $client->loadOpenIdConfig($this->openIdHost);
             return $client;
