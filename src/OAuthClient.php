@@ -10,6 +10,8 @@ namespace Phore\App\Mod\OAuth;
 
 
 use Phore\Core\Exception\InvalidDataException;
+use phpseclib\Crypt\RSA;
+use phpseclib\Math\BigInteger;
 
 class OAuthClient
 {
@@ -128,12 +130,27 @@ class OAuthClient
             throw new InvalidDataException("Signing Algorithms jwks: {$jwks['keys'][$index]['alg']} and jwt: $headerAlg don't match.");
         }
 
-        $modulo = phore_pluck('n',$jwk, new \InvalidArgumentException("Invalid jwk: n missing."));
+        $modulus = phore_pluck('n',$jwk, new \InvalidArgumentException("Invalid jwk: n missing."));
         $exponent = phore_pluck('e',$jwk, new \InvalidArgumentException("Invalid jwk: e missing."));
 
-        $converter = new PublicKeyConverter();
-        $pubKey = $converter->getPemPublicKeyFromModExp($modulo, $exponent);
-        $pub = openssl_pkey_get_public($pubKey);
+        $x5c = phore_pluck("x5c.0", $jwk, null);
+
+        if ($x5c === null) {
+            $converter = new PublicKeyConverter();
+            $pubKey = $converter->getPemPublicKeyFromModExp($modulus, $exponent);
+            $pub = openssl_pkey_get_public((string)$pubKey);
+        } else {
+            $pem = "-----BEGIN CERTIFICATE-----\n" . $x5c .  "\n-----END CERTIFICATE-----\n";
+            $x5cres = openssl_x509_read($pem);
+            if ($x5cres === false)
+                throw new \Exception("Cannot open x5c data." . openssl_error_string());
+            $pub = openssl_pkey_get_public($x5cres);
+        }
+
+        if ($pub === false)
+            throw new \Exception("Cannot extract public key von x5c resource" . openssl_error_string());
+
+
         $verify = openssl_verify($data, $signature, $pub, $rsaSignatureAlg);
         if ($verify === 1)
             return true; // Signature correct
