@@ -10,13 +10,13 @@
   ],
   "require": {
     "php": ">=7.2",
+    "ext-openssl": "*",
+    "ext-json": "*",
     "phore/session": "*",
     "phore/micro-app": "*",
     "phore/flash": "*",
     "phore/http-client": "*",
-    "ext-openssl": "*",
-    "phore/filesystem": "*",
-    "ext-json": "*"
+    "phore/filesystem": "*"
   },
   "suggest": {
   },
