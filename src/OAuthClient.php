@@ -154,7 +154,7 @@ class OAuthClient
         $verify = openssl_verify($data, $signature, $pub, $rsaSignatureAlg);
         if ($verify === 1)
             return true; // Signature correct
-        if ($verify === 0);
+        if ($verify === 0)
             return false; // Signature invalid
         // Any openssl error
         throw new \InvalidArgumentException("Openssl error on verifying signature: " . openssl_error_string());
