@@ -60,16 +60,25 @@ class OAuthModule implements AppModule
             return $client;
         });
 
-        $app->onEvent(App::EVENT_ON_REQUEST, function (Request $request) use ($app) {
+        $app->onEvent(App::EVENT_ON_REQUEST, function (Request $request, Session $session) use ($app) {
+            /* @var $oAuthClient \Phore\App\Mod\OAuth\OAuthClient */
+            $oAuthClient = $app->oAuthClient;
+
+            // Request has an authorization token
+            if($request->authorizationMethod === "bearer") {
+                $token = $request->authorization;
+                if($oAuthClient->validateToken($token) === true) {
+                    return true;
+                }
+            }
+
+            // user returned from login with a code
             if ($request->GET->has("code") && $request->GET->has("state") && $request->requestMethod == "GET") {
                 /* @var $session Session */
                 $session = $app->session;
-                /* @var $oAuthClient \Phore\App\Mod\OAuth\OAuthClient */
-                $oAuthClient = $app->oAuthClient;
-
 
                 if ($request->GET->get("state") !== $session->get(self::SESS_REQ_STATE))
-                    throw new \InvalidArgumentException("Session state invalid: {$request->GET->get("state")} !== '{$session->get(self::SESS_REQ_STATE)}'");
+                    throw new \InvalidArgumentException("Session stkick ate invalid: {$request->GET->get("state")} !== '{$session->get(self::SESS_REQ_STATE)}'");
 
                 $token = $oAuthClient->getToken($request->GET->get("code"), $session->get(self::SESS_LAST_BACKLINK_KEY));
 
@@ -77,22 +86,18 @@ class OAuthModule implements AppModule
                     throw new InvalidDataException("token signature doesnt match public key.");
                 }
                 //TODO: Check access rights, issuer
-
                 $session->set("id_token", $token['id_token']);
-
                 $session->setOauthToken($token["access_token"]);
                 $session->set(self::SESS_TOKEN_TIMEOUT, time() + $token["expires_in"]);
-
                 $session->update();
 
                 return new RedirectResponse($session->get(self::SESS_LAST_BACKLINK_KEY));
             }
-        });
 
-        $app->onEvent(App::EVENT_ON_REQUEST, function (Request $request, Session $session) use ($app) {
+            // unknown user, initiate login process
             ignore_user_abort(true);
             if ($session->get(self::SESS_TOKEN_TIMEOUT, 0) > time())
-                return;
+                return true;
 
             /* @var $oAuthClient \Phore\App\Mod\OAuth\OAuthClient */
             $oAuthClient = $app->oAuthClient;

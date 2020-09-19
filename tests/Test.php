@@ -47,4 +47,10 @@ class Test extends TestCase
         $this->assertTrue($result["success"]);
     }
 
+    public function testBearerRsaAvailable() {
+        $result = phore_http_request($this->authURL."/token")->withMethod('POST')->send()->getBodyJson();
+        $result = phore_http_request($this->clientURL)->withBearerAuth($result['id_token'])->send()->getBodyJson();
+        $this->assertTrue($result["success"]);
+    }
+
 }
