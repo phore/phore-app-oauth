@@ -69,8 +69,7 @@ class OAuthModule implements AppModule
             // Request has an authorization token
             if($request->authorizationMethod === "bearer") {
                 $token = $request->authorization;
-                if($oAuthClient->validateToken($token) === true) {
-                    $oAuthClient->validateClaims($this->requiredClaims);
+                if($oAuthClient->validateToken($token) === true && $oAuthClient->validateClaims($this->requiredClaims) === true) {
                     return true;
                 }
             }
@@ -85,8 +84,11 @@ class OAuthModule implements AppModule
 
                 $token = $oAuthClient->getToken($request->GET->get("code"), $session->get(self::SESS_LAST_BACKLINK_KEY));
 
-                if($oAuthClient->validateToken($token['id_token']) !== true) {
+                if(!$oAuthClient->validateToken($token['id_token'])) {
                     throw new InvalidDataException("token signature doesnt match public key.");
+                }
+                if(!$oAuthClient->validateClaims($this->requiredClaims)) {
+                    throw new InvalidDataException("Required claims missing");
                 }
                 //TODO: Check access rights, issuer
                 $session->set("id_token", $token['id_token']);
