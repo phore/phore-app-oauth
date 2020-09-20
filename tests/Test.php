@@ -14,7 +14,7 @@ class Test extends TestCase
         // call test client
         $result = phore_http_request($this->clientURL, [], [CURLOPT_FOLLOWLOCATION => false])->send();
         $location = $result->getHeaders()['location'];
-        $this->assertStringContainsString("http://localhost/oAuthServer/authorize?client_id=test_client&response_type=code&scope=openid&redirect_uri=http%3A%2F%2Flocalhost%2Ftest&state=", $location[0]);
+        $this->assertStringContainsString("http://localhost/oAuthServer/authorize?client_id=test_client&response_type=code&scope=openid+admin&redirect_uri=http%3A%2F%2Flocalhost%2Ftest&state=", $location[0]);
 
         //redirect to signin
         $state = substr($location[0], -12);

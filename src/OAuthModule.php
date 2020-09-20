@@ -25,6 +25,7 @@ class OAuthModule implements AppModule
     private $clientKey;
     private $openIdHost;
     private $clientScopes;
+    private $requiredClaims;
 
 
 
@@ -33,12 +34,13 @@ class OAuthModule implements AppModule
     const SESS_TOKEN_TIMEOUT = "_oauth_token_timeout";
     const SESS_REQ_STATE = "_oauth_req_state";
 
-    public function __construct($clientId, $clientKey, $openIdHost, array $clientScopes=["openid"])
+    public function __construct($clientId, $clientKey, $openIdHost, array $clientScopes=["openid"], array $requiredClaims = [])
     {
         $this->clientId = $clientId;
         $this->clientKey = $clientKey;
         $this->openIdHost = $openIdHost;
         $this->clientScopes = $clientScopes;
+        $this->requiredClaims = $requiredClaims;
     }
 
     /**
@@ -68,6 +70,7 @@ class OAuthModule implements AppModule
             if($request->authorizationMethod === "bearer") {
                 $token = $request->authorization;
                 if($oAuthClient->validateToken($token) === true) {
+                    $oAuthClient->validateClaims($this->requiredClaims);
                     return true;
                 }
             }

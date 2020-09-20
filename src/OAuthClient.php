@@ -21,6 +21,8 @@ class OAuthClient
     private $alg = "RS256";
     private $scopes = [];
 
+    private $claims = [];
+
     private $config;
 
     public function __construct(string $clientId, string $clientSecret)
@@ -78,6 +80,7 @@ class OAuthClient
             throw new \InvalidArgumentException("Malformed or unsupported JWT");
         }
         $header = phore_json_decode(base64_decode($tokenComponents[0]));
+        $this->claims = phore_json_decode(base64_decode($tokenComponents[1]));
         $data = $tokenComponents[0].".".$tokenComponents[1];
         $signature = base64_decode(str_replace(['-', '_', ''], ['+', '/', '='], $tokenComponents[2]));
 
@@ -85,7 +88,6 @@ class OAuthClient
 
         switch ($headerAlg) {
             case "HS256":
-                $hash = hash_hmac("sha256", $data, $this->clientSecret, true);
                 if(hash_equals($signature, hash_hmac("sha256", $data, $this->clientSecret, true))) {
                     return true;
                 }
@@ -158,6 +160,16 @@ class OAuthClient
             return false; // Signature invalid
         // Any openssl error
         throw new \InvalidArgumentException("Openssl error on verifying signature: " . openssl_error_string());
+    }
+
+    public function validateClaims(array $claims = [])
+    {
+        foreach ($claims as $key => $value) {
+            if(!isset($this->claims[$key]) || $this->claims[$key] !== $value) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public function getScopes() {
